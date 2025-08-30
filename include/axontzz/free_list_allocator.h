@@ -1,7 +1,7 @@
 #pragma once
 
-#include "allocator_interface.hpp"
-#include "memory_source.hpp"
+#include "allocator_interface.h"
+#include "memory_source.h"
 #include <cstddef>
 #include <cstdint>
 
@@ -51,10 +51,10 @@ private:
         size_t size;           // Size of this free block (including header)
         FreeBlock* next;       // Next block in free list
         FreeBlock* prev;       // Previous block in free list (for fast removal)
-        
-        // Minimum allocation size must accommodate this header
-        static constexpr size_t MIN_BLOCK_SIZE = sizeof(FreeBlock);
     };
+    
+    // Minimum allocation size must accommodate the free block header
+    static constexpr size_t MIN_BLOCK_SIZE = sizeof(FreeBlock);
     
     // Memory region descriptor - tracks OS allocations
     struct MemoryRegion {
@@ -83,9 +83,12 @@ private:
     static bool is_aligned(void* ptr, size_t alignment);
     static void* align_pointer(void* ptr, size_t alignment);
     
-    // Validation and debugging
+public:
+    // Validation and debugging (public for testing)
     bool validate_free_list() const;
     void dump_free_list() const;
+
+private:
     
     // Disable copying
     FreeListAllocator(const FreeListAllocator&) = delete;
